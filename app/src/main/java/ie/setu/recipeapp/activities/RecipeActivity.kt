@@ -1,8 +1,9 @@
-package ie.setu.recipeapp
+package ie.setu.recipeapp.activities
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.google.android.material.snackbar.Snackbar
+import ie.setu.recipeapp.activities.models.RecipeModel
 import ie.setu.recipeapp.databinding.ActivityRecipeBinding
 import timber.log.Timber
 import timber.log.Timber.i
@@ -10,6 +11,8 @@ import timber.log.Timber.i
 class RecipeActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityRecipeBinding
+    var recipe = RecipeModel()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -17,15 +20,17 @@ class RecipeActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         Timber.plant(Timber.DebugTree())
-        i("Recipe Activity started..")
+
+        i("Recipe Activity started...")
 
         binding.btnAdd.setOnClickListener() {
-            val recipeTitle = binding.recipeTitle.text.toString()
-            if (recipeTitle.isNotEmpty()) {
-                i("add Button Pressed")
-            } else {
+            recipe.title = binding.recipeTitle.text.toString()
+            if (recipe.title.isNotEmpty()) {
+                i("add Button Pressed: ${recipe.title}")
+            }
+            else {
                 Snackbar
-                    .make(it, "Please enter a title", Snackbar.LENGTH_LONG)
+                    .make(it,"Please Enter a title", Snackbar.LENGTH_LONG)
                     .show()
             }
         }
