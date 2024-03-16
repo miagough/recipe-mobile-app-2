@@ -30,10 +30,11 @@ class RecipeActivity : AppCompatActivity() {
                 i("add Button Pressed: ${recipe}")
                 for (i in app.recipes.indices)
                 { i("Recipe[$i]:${this.app.recipes[i]}") }
+                setResult(RESULT_OK)
+                finish()
             }
             else {
-                Snackbar
-                    .make(it,"Please Enter a title", Snackbar.LENGTH_LONG)
+                Snackbar.make(it,"Please Enter a title", Snackbar.LENGTH_LONG)
                     .show()
             }
         }
