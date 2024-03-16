@@ -23,6 +23,7 @@ class RecipeActivity : AppCompatActivity() {
 
         binding.btnAdd.setOnClickListener() {
             recipe.title = binding.recipeTitle.text.toString()
+            recipe.description = binding.recipeDescription.text.toString()
             if (recipe.title.isNotEmpty()) {
                 recipes.add(recipe.copy())
                 i("add Button Pressed: ${recipe}")
