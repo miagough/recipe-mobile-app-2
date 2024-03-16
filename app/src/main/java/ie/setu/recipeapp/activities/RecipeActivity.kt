@@ -5,6 +5,7 @@ import android.os.Bundle
 import com.google.android.material.snackbar.Snackbar
 import ie.setu.recipeapp.activities.models.RecipeModel
 import ie.setu.recipeapp.databinding.ActivityRecipeBinding
+import ie.setu.recipeapp.main.MainApp
 import timber.log.Timber
 import timber.log.Timber.i
 
@@ -12,23 +13,23 @@ class RecipeActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityRecipeBinding
     var recipe = RecipeModel()
-    val recipes = ArrayList<RecipeModel>()
+    lateinit var app : MainApp
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityRecipeBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        Timber.plant(Timber.DebugTree())
-        i("Recipe Activity started...")
 
+        app = application as MainApp
+        i("Recipe Activity started..")
         binding.btnAdd.setOnClickListener() {
             recipe.title = binding.recipeTitle.text.toString()
             recipe.description = binding.recipeDescription.text.toString()
             if (recipe.title.isNotEmpty()) {
-                recipes.add(recipe.copy())
+                app.recipes.add(recipe.copy())
                 i("add Button Pressed: ${recipe}")
-                for (i in recipes.indices)
-                { i("Recipe[$i]:${this.recipes[i]}") }
+                for (i in app.recipes.indices)
+                { i("Recipe[$i]:${this.app.recipes[i]}") }
             }
             else {
                 Snackbar
