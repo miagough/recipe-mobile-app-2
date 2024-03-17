@@ -28,6 +28,13 @@ class RecipeActivity : AppCompatActivity() {
 
         app = application as MainApp
         i("Recipe Activity started..")
+
+        if (intent.hasExtra("recipe_edit")) {
+            recipe = intent.extras?.getParcelable("recipe_edit")!!
+            binding.recipeTitle.setText(recipe.title)
+            binding.recipeDescription.setText(recipe.description)
+        }
+
         binding.btnAdd.setOnClickListener() {
             recipe.title = binding.recipeTitle.text.toString()
             recipe.description = binding.recipeDescription.text.toString()
