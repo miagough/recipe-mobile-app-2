@@ -11,10 +11,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import ie.setu.recipeapp.R
 import ie.setu.recipeapp.adapters.RecipeAdapter
+import ie.setu.recipeapp.adapters.RecipeListener
 import ie.setu.recipeapp.databinding.ActivityRecipeListBinding
 import ie.setu.recipeapp.main.MainApp
+import ie.setu.recipeapp.models.RecipeModel
 
-class RecipeListActivity : AppCompatActivity() {
+class RecipeListActivity : AppCompatActivity(), RecipeListener {
 
     lateinit var app: MainApp
     private lateinit var binding: ActivityRecipeListBinding
@@ -30,7 +32,7 @@ class RecipeListActivity : AppCompatActivity() {
         val layoutManager = LinearLayoutManager(this)
         binding.recyclerView.layoutManager = layoutManager
         //binding.recyclerView.adapter = RecipeAdapter(app.recipes)
-        binding.recyclerView.adapter = RecipeAdapter(app.recipes.findAll())
+        binding.recyclerView.adapter = RecipeAdapter(app.recipes.findAll(), this)
     }
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_main, menu)
@@ -58,5 +60,10 @@ class RecipeListActivity : AppCompatActivity() {
                 Snackbar.make(binding.root, "Recipe Add Cancelled", Snackbar.LENGTH_LONG).show()
             }
         }
+
+    override fun onRecipeClick(recipe: RecipeModel) {
+        val launcherIntent = Intent(this, RecipeActivity::class.java)
+        getResult.launch(launcherIntent)
+    }
 }
 
