@@ -4,17 +4,14 @@ import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
-import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
 import ie.setu.recipeapp.R
-import ie.setu.recipeapp.activities.models.RecipeModel
+import ie.setu.recipeapp.adapters.RecipeAdapter
 import ie.setu.recipeapp.databinding.ActivityRecipeListBinding
-import ie.setu.recipeapp.databinding.CardRecipeBinding
 import ie.setu.recipeapp.main.MainApp
 
 class RecipeListActivity : AppCompatActivity() {
@@ -32,7 +29,8 @@ class RecipeListActivity : AppCompatActivity() {
 
         val layoutManager = LinearLayoutManager(this)
         binding.recyclerView.layoutManager = layoutManager
-        binding.recyclerView.adapter = RecipeAdapter(app.recipes)
+        //binding.recyclerView.adapter = RecipeAdapter(app.recipes)
+        binding.recyclerView.adapter = RecipeAdapter(app.recipes.findAll())
     }
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_main, menu)
@@ -54,36 +52,11 @@ class RecipeListActivity : AppCompatActivity() {
             ActivityResultContracts.StartActivityForResult()
         ) {
             if (it.resultCode == Activity.RESULT_OK) {
-                (binding.recyclerView.adapter)?.notifyItemRangeChanged(0, app.recipes.size)
+                (binding.recyclerView.adapter)?.notifyItemRangeChanged(0, app.recipes.findAll().size)
+            }
+            if (it.resultCode == Activity.RESULT_CANCELED) {
+                Snackbar.make(binding.root, "Recipe Add Cancelled", Snackbar.LENGTH_LONG).show()
             }
         }
 }
 
-class RecipeAdapter constructor(private var recipes: List<RecipeModel>):
-        RecyclerView.Adapter<RecipeAdapter.MainHolder>() {
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainHolder {
-        val binding = CardRecipeBinding
-            .inflate(LayoutInflater.from(parent.context), parent, false)
-
-        return MainHolder(binding)
-    }
-
-    override fun onBindViewHolder(holder: MainHolder, position: Int) {
-        val recipe = recipes[holder.adapterPosition]
-        holder.bind(recipe)
-    }
-
-    override fun getItemCount(): Int = recipes.size
-
-
-
-    class MainHolder(private val binding: CardRecipeBinding) :
-        RecyclerView.ViewHolder(binding.root) {
-
-        fun bind(recipe: RecipeModel) {
-            binding.recipeTitle.text = recipe.title
-            binding.recipeDescription.text = recipe.description
-        }
-    }
-
-}
