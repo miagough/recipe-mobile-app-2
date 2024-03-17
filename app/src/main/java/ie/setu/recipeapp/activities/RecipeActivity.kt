@@ -17,6 +17,7 @@ class RecipeActivity : AppCompatActivity() {
     private lateinit var binding: ActivityRecipeBinding
     var recipe = RecipeModel()
     lateinit var app : MainApp
+    var edit = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,21 +31,28 @@ class RecipeActivity : AppCompatActivity() {
         i("Recipe Activity started..")
 
         if (intent.hasExtra("recipe_edit")) {
+            edit = true
             recipe = intent.extras?.getParcelable("recipe_edit")!!
             binding.recipeTitle.setText(recipe.title)
             binding.recipeDescription.setText(recipe.description)
+            binding.btnAdd.setText(R.string.save_recipe)
         }
 
         binding.btnAdd.setOnClickListener() {
             recipe.title = binding.recipeTitle.text.toString()
             recipe.description = binding.recipeDescription.text.toString()
             if (recipe.title.isNotEmpty()) {
-                app.recipes.create(recipe.copy())
+                if (edit){
+                    app.recipes.update(recipe.copy())
+                }
+                else{
+                    app.recipes.create(recipe.copy())
+                }
                 setResult(RESULT_OK)
                 finish()
             }
             else {
-                Snackbar.make(it,"Please Enter a title", Snackbar.LENGTH_LONG)
+                Snackbar.make(it,getString(R.string.enter_recipe_title), Snackbar.LENGTH_LONG)
                     .show()
             }
         }
