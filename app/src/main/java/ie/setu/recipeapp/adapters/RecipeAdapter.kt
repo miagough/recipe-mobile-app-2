@@ -6,8 +6,11 @@ import androidx.recyclerview.widget.RecyclerView
 import ie.setu.recipeapp.models.RecipeModel
 import ie.setu.recipeapp.databinding.CardRecipeBinding
 
-
-class RecipeAdapter constructor(private var recipes: List<RecipeModel>) :
+interface RecipeListener{
+    fun onRecipeClick(recipe: RecipeModel)
+}
+class RecipeAdapter constructor(private var recipes: List<RecipeModel>,
+                                private val listener: RecipeListener) :
     RecyclerView.Adapter<RecipeAdapter.MainHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainHolder {
@@ -18,7 +21,7 @@ class RecipeAdapter constructor(private var recipes: List<RecipeModel>) :
 
     override fun onBindViewHolder(holder: MainHolder, position: Int) {
         val recipe = recipes[holder.adapterPosition]
-        holder.bind(recipe)
+        holder.bind(recipe, listener)
     }
 
     override fun getItemCount(): Int = recipes.size
@@ -26,9 +29,10 @@ class RecipeAdapter constructor(private var recipes: List<RecipeModel>) :
     class MainHolder(private val binding : CardRecipeBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(recipe: RecipeModel) {
+        fun bind(recipe: RecipeModel, listener: RecipeListener) {
             binding.recipeTitle.text = recipe.title
             binding.recipeDescription.text = recipe.description
+            binding.root.setOnClickListener { listener.onRecipeClick(recipe)}
         }
     }
 }
