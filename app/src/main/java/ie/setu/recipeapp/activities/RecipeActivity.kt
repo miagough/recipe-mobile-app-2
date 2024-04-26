@@ -15,6 +15,7 @@ import ie.setu.recipeapp.models.RecipeModel
 import ie.setu.recipeapp.databinding.ActivityRecipeBinding
 import ie.setu.recipeapp.helpers.showImagePicker
 import ie.setu.recipeapp.main.MainApp
+import ie.setu.recipeapp.models.Location
 import timber.log.Timber
 import timber.log.Timber.i
 
@@ -22,9 +23,11 @@ class RecipeActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityRecipeBinding
     private lateinit var imageIntentLauncher: ActivityResultLauncher<Intent>
+    private lateinit var mapIntentLauncher: ActivityResultLauncher<Intent>
     var recipe = RecipeModel()
     lateinit var app: MainApp
     var edit = false
+    // var location = Location(52.2593, -7.1101, 10f)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,6 +36,18 @@ class RecipeActivity : AppCompatActivity() {
 
         binding.topAppBar.title = title
         setSupportActionBar(binding.topAppBar)
+
+        binding.recipeLocation.setOnClickListener {
+            val location = Location(52.2593, -7.1101, 10f)
+            if (recipe.zoom != 0f) {
+                location.lat =  recipe.lat
+                location.lng = recipe.lng
+                location.zoom = recipe.zoom
+            }
+            val launcherIntent = Intent(this, MapActivity::class.java)
+                .putExtra("location", location)
+            mapIntentLauncher.launch(launcherIntent)
+        }
 
         app = application as MainApp
         i("Recipe Activity started..")
@@ -73,47 +88,71 @@ class RecipeActivity : AppCompatActivity() {
             showImagePicker(imageIntentLauncher)
         }
         registerImagePickerCallback()
+
+
+        registerMapCallback()
     }
 
-        override fun onCreateOptionsMenu(menu: Menu): Boolean {
-            menuInflater.inflate(R.menu.menu_recipe, menu)
-            return super.onCreateOptionsMenu(menu)
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.menu_recipe, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.item_cancel -> {
+                setResult(RESULT_CANCELED)
+                finish()
+            }
         }
+        return super.onOptionsItemSelected(item)
 
+    }
 
-        override fun onOptionsItemSelected(item: MenuItem): Boolean {
-            when (item.itemId) {
-                R.id.item_cancel -> {
-                    setResult(RESULT_CANCELED)
-                    finish()
+    private fun registerImagePickerCallback() {
+        imageIntentLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult())
+            { result ->
+                when (result.resultCode) {
+                    RESULT_OK -> {
+                        if (result.data != null) {
+                            i("Got Result ${result.data!!.data}")
+                            recipe.image = result.data!!.data!!
+                            Picasso.get()
+                                .load(recipe.image)
+                                .into(binding.recipeImage)
+                            binding.chooseImage.setText(R.string.change_recipe_image)
+                        } // end of if
+                    }
+
+                    RESULT_CANCELED -> {}
+                    else -> {}
                 }
             }
-            return super.onOptionsItemSelected(item)
-
-        }
-
-        private fun registerImagePickerCallback() {
-            imageIntentLauncher =
-                registerForActivityResult(ActivityResultContracts.StartActivityForResult())
-                { result ->
-                    when (result.resultCode) {
-                        RESULT_OK -> {
-                            if (result.data != null) {
-                                i("Got Result ${result.data!!.data}")
-                                recipe.image = result.data!!.data!!
-                                Picasso.get()
-                                    .load(recipe.image)
-                                    .into(binding.recipeImage)
-                                binding.chooseImage.setText(R.string.change_recipe_image)
-                            } // end of if
-                        }
-
-                        RESULT_CANCELED -> {}
-                        else -> {}
-                    }
-                }
-        }
     }
+    private fun registerMapCallback() {
+        mapIntentLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult())
+            { result ->
+                when (result.resultCode) {
+                    RESULT_OK -> {
+                        if (result.data != null) {
+                            i("Got Location ${result.data.toString()}")
+                            val location = result.data!!.extras?.getParcelable<Location>("location")!!
+                            i("Location == $location")
+                            recipe.lat = location.lat
+                            recipe.lng = location.lng
+                           recipe.zoom = location.zoom
+                        } // end of if
+                    }
+                    RESULT_CANCELED -> { } else -> { }
+                }
+            }
+    }
+
+}
 
 
 

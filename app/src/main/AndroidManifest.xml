@@ -13,6 +13,16 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Material3.Light.NoActionBar"
         tools:targetApi="31">
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyB6Nm3WmRbGYfa_AqJv-ll5WM_Be_AMCUw" />
+
+        <activity
+            android:name=".activities.MapActivity"
+            android:exported="false"
+            android:label="@string/title_activity_map" />
+
         <activity
             android:name=".activities.RecipeListActivity"
             android:exported="true">
@@ -24,8 +34,7 @@
         </activity>
         <activity
             android:name=".activities.RecipeActivity"
-            android:exported="true">
-        </activity>
+            android:exported="true" />
     </application>
 
 </manifest>

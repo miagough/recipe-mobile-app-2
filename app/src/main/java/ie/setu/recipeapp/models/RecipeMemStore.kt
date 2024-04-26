@@ -19,11 +19,14 @@ class RecipeMemStore : RecipeStore {
     }
 
     override fun update(recipe: RecipeModel) {
-        var foundRecipe: RecipeModel? = recipes.find { p -> p.id == recipe.id }
+        val foundRecipe: RecipeModel? = recipes.find { p -> p.id == recipe.id }
         if (foundRecipe !=null) {
             foundRecipe.title = recipe.title
             foundRecipe.description = recipe.description
             foundRecipe.image = recipe.image
+            foundRecipe.lat = recipe.lat
+            foundRecipe.lng = recipe.lng
+            foundRecipe.zoom = recipe.zoom
             logAll()
         }
     }
