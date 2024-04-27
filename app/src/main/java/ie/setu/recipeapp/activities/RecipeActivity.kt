@@ -85,7 +85,7 @@ class RecipeActivity : AppCompatActivity() {
         }
 
         binding.chooseImage.setOnClickListener {
-            showImagePicker(imageIntentLauncher)
+            showImagePicker(imageIntentLauncher,this)
         }
         registerImagePickerCallback()
 
@@ -96,6 +96,7 @@ class RecipeActivity : AppCompatActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_recipe, menu)
+        if (edit) menu.getItem(1).isVisible = true
         return super.onCreateOptionsMenu(menu)
     }
 
@@ -106,29 +107,36 @@ class RecipeActivity : AppCompatActivity() {
                 setResult(RESULT_CANCELED)
                 finish()
             }
+            R.id.item_delete -> {
+                app.recipes.delete(recipe)
+                setResult(99)
+                finish()
+            }
         }
         return super.onOptionsItemSelected(item)
-
     }
 
     private fun registerImagePickerCallback() {
         imageIntentLauncher =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult())
             { result ->
-                when (result.resultCode) {
+                when(result.resultCode){
                     RESULT_OK -> {
                         if (result.data != null) {
                             i("Got Result ${result.data!!.data}")
-                            recipe.image = result.data!!.data!!
+
+                            val image = result.data!!.data!!
+                            contentResolver.takePersistableUriPermission(image,
+                                Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                            recipe.image = image
+
                             Picasso.get()
                                 .load(recipe.image)
                                 .into(binding.recipeImage)
                             binding.chooseImage.setText(R.string.change_recipe_image)
                         } // end of if
                     }
-
-                    RESULT_CANCELED -> {}
-                    else -> {}
+                    RESULT_CANCELED -> { } else -> { }
                 }
             }
     }
