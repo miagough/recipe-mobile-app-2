@@ -38,4 +38,9 @@ class RecipeMemStore : RecipeStore {
     fun logAll() {
         recipes.forEach{ i("${it}") }
     }
+
+    override fun findById(id:Long) : RecipeModel? {
+        val foundRecipe: RecipeModel? = recipes.find { it.id == id }
+        return foundRecipe
+    }
 }
