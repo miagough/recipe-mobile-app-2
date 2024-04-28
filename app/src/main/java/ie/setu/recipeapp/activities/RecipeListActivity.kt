@@ -15,30 +15,34 @@ import ie.setu.recipeapp.adapters.RecipeListener
 import ie.setu.recipeapp.databinding.ActivityRecipeListBinding
 import ie.setu.recipeapp.main.MainApp
 import ie.setu.recipeapp.models.RecipeModel
-
 class RecipeListActivity : AppCompatActivity(), RecipeListener {
 
     lateinit var app: MainApp
     private lateinit var binding: ActivityRecipeListBinding
     private var position: Int = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityRecipeListBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        binding.topAppBar.title = title
-        setSupportActionBar(binding.topAppBar)
 
         app = application as MainApp
 
         val layoutManager = LinearLayoutManager(this)
         binding.recyclerView.layoutManager = layoutManager
-        //binding.recyclerView.adapter = RecipeAdapter(app.recipes)
         binding.recyclerView.adapter = RecipeAdapter(app.recipes.findAll(), this)
+
+        binding.topAppBar.title = title  //Name of the Project
+        setSupportActionBar(binding.topAppBar)
+
     }
+
+
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_main, menu)
         return super.onCreateOptionsMenu(menu)
     }
+
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
@@ -46,33 +50,56 @@ class RecipeListActivity : AppCompatActivity(), RecipeListener {
                 val launcherIntent = Intent(this, RecipeActivity::class.java)
                 getResult.launch(launcherIntent)
             }
+
+            R.id.item_map -> {
+                val launcherIntent = Intent(this, RecipeMapsActivity::class.java)
+                mapIntentLauncher.launch(launcherIntent)
+            }
         }
         return super.onOptionsItemSelected(item)
     }
+
 
     private val getResult =
         registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()
         ) {
-            when(it.resultCode) {
+            when (it.resultCode) {
                 Activity.RESULT_OK ->
                     (binding.recyclerView.adapter)?.notifyItemRangeChanged(
                         0,
-                        app.recipes.findAll().size)
+                        app.recipes.findAll().size
+                    )
+
                 Activity.RESULT_CANCELED ->
                     Snackbar.make(
                         binding.root,
-                        getString(R.string.recipe_add_cancelled), Snackbar.LENGTH_LONG).show()
+                        getString(R.string.recipe_add_cancelled), Snackbar.LENGTH_LONG
+                    ).show()
+
                 99 ->
                     (binding.recyclerView.adapter)?.notifyItemRemoved(position)
             }
         }
 
-    override fun onRecipeClick(recipe: RecipeModel, position : Int) {
+
+    private val mapIntentLauncher =
+        registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) { }
+
+    override fun onRecipeClick(recipe: RecipeModel, position: Int) {
         val launcherIntent = Intent(this, RecipeActivity::class.java)
         launcherIntent.putExtra("recipe_edit", recipe)
-        this.position = position
-        getResult.launch(launcherIntent)
+
+    }
+
+    override fun onPlacemarkClick(recipe: RecipeModel, pos: Int) {
+        val launcherIntent = Intent(this, RecipeActivity::class.java)
+        launcherIntent.putExtra("recipe_edit", recipe)
     }
 }
+
+
+
 

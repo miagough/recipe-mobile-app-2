@@ -73,6 +73,11 @@ class RecipeJSONStore(private val context: Context) : RecipeStore {
     private fun logAll() {
         recipes.forEach { Timber.i("$it") }
     }
+
+    override fun findById(id:Long) : RecipeModel? {
+        val foundRecipe: RecipeModel? = recipes.find { it.id == id }
+        return foundRecipe
+    }
 }
 
 class UriParser : JsonDeserializer<Uri>,JsonSerializer<Uri> {
