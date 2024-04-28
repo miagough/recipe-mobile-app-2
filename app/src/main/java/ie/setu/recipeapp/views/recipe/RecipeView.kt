@@ -70,6 +70,7 @@ class RecipeView : AppCompatActivity() {
     fun showRecipe(recipe: RecipeModel) {
         binding.recipeTitle.setText(recipe.title)
         binding.recipeDescription.setText(recipe.description)
+        binding.recipeDescription.setText(recipe.date)
         Picasso.get()
             .load(recipe.image)
             .into(binding.recipeImage)
