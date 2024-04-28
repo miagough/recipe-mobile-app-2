@@ -17,7 +17,7 @@
         android:theme="@style/Theme.Material3.Light.NoActionBar"
         tools:targetApi="31">
         <activity
-            android:name=".activities.RecipeMapsActivity"
+            android:name=".activities.RecipeMapsView"
             android:exported="false"
             android:label="@string/title_activity_recipe_maps"
             android:theme="@style/Theme.Material3.Light.NoActionBar" />
@@ -27,11 +27,11 @@
             android:value="AIzaSyB6Nm3WmRbGYfa_AqJv-ll5WM_Be_AMCUw" />
 
         <activity
-            android:name=".activities.MapActivity"
+            android:name=".views.editLocation.EditLocationView"
             android:exported="false"
             android:label="@string/title_activity_map" />
         <activity
-            android:name=".activities.RecipeListActivity"
+            android:name=".views.recipeList.RecipeListView"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -40,7 +40,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.RecipeActivity"
+            android:name=".views.recipe.RecipeView"
             android:exported="true" />
     </application>
 

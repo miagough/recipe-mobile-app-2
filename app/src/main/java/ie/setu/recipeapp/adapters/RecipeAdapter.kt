@@ -9,7 +9,7 @@ import ie.setu.recipeapp.databinding.CardRecipeBinding
 
 interface RecipeListener {
     fun onRecipeClick(recipe: RecipeModel, position : Int)
-    fun onPlacemarkClick(recipe: RecipeModel, pos: Int)
+
 }
 class RecipeAdapter constructor(private var recipes: List<RecipeModel>,
                                 private val listener: RecipeListener) :
