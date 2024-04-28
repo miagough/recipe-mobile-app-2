@@ -42,6 +42,8 @@
         <activity
             android:name=".views.recipe.RecipeView"
             android:exported="true" />
+        <activity android:theme="@style/RecipeAppTheme.Starting"
+            android:name="">
     </application>
 
 </manifest>
