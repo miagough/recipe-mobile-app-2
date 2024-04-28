@@ -14,13 +14,13 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Material3.Light.NoActionBar"
+        android:theme="@style/RecipeAppTheme"
         tools:targetApi="31">
         <activity
-            android:name=".activities.RecipeMapsView"
+            android:name=".views.map.RecipeMapView"
             android:exported="false"
             android:label="@string/title_activity_recipe_maps"
-            android:theme="@style/Theme.Material3.Light.NoActionBar" />
+            android:theme="@style/RecipeAppTheme" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
