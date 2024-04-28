@@ -4,6 +4,7 @@ import android.app.Application
 import ie.setu.recipeapp.models.RecipeJSONStore
 import ie.setu.recipeapp.models.RecipeMemStore
 import ie.setu.recipeapp.models.RecipeModel
+import ie.setu.recipeapp.models.RecipeSQLStore
 import ie.setu.recipeapp.models.RecipeStore
 import timber.log.Timber
 import timber.log.Timber.i
@@ -14,8 +15,8 @@ class MainApp : Application() {
     override fun onCreate() {
         super.onCreate()
         Timber.plant(Timber.DebugTree())
-        //recipes = RecipeMemStore()
-        recipes = RecipeJSONStore(applicationContext)
+        recipes = RecipeSQLStore(applicationContext)  //SQLite approach
         i("Recipe started")
     }
+
 }
